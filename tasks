@@ -1,0 +1,20 @@
+Bugs
+---------------------------------------
+[ ] 1) check for button whether it is disabled or not. If it is disabled then wait for some time. else click on it.
+[ ] 2) Wait for success message
+[ ] 3) check the submission result if it Says data is already submitted then infor.
+[ ] 4) fix undefined error in activity object
+
+Questions
+---------------------------------------
+[ ] 1) can we send multiple response in single request
+[ ] 2) can we send 
+[ ] 3) can we send 
+
+Integration of Frontend with Backend
+---------------------------------------
+[✔️] 1) Create React app
+[✔️] 2) Create Navbar and Main Components
+[ ] 3) Create login page for initial access
+[ ] 4) Create real-time list of AWCs and activities
+[ ] 5) Create profile CRUD operations
