@@ -1,6 +1,8 @@
 const puppeteer = require("puppeteer");
 
-const _date = "01-05-2023";
+// const _date = "01-05-2023";
+// const min = 119;
+// const max = 2;
 
 const AWCs = [
   { value: "456578", title: "02 Gurja" },
@@ -260,8 +262,8 @@ const activity = [
   { value: "86", title: "Others" },
 ];
 
-let AWCsIndex = 0;
-let activityIndex = 0;
+// let AWCsIndex = min;
+// let activityIndex = 0;
 
 function randomInt(min, max) {
   min = Math.ceil(min);
@@ -269,14 +271,15 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-(async () => {
+async function scrap(stream, _date, AWCsIndex=0, entriesToBeDone=AWCs.length, activityIndex=0){
   const browser = await puppeteer.launch({
     headless: false,
     defaultViewport: false,
     userDataDir: "./tmp",
   });
 
-  const page = await browser.newPage();
+  const context = await browser.createIncognitoBrowserContext();
+  const page = await context.newPage();
   await page.goto("https://poshanabhiyaan.gov.in/addactivityparticipation", {
     waitUntil: "load",
   });
@@ -289,7 +292,7 @@ function randomInt(min, max) {
     await page.click("button[type='submit']"),
   ]);
 
-  for (const AWCsObj of AWCs) {
+  for (let i = 0; i < entriesToBeDone; i++) {
     for (const activityObj of activity) {
       await page.waitForSelector("select[name='SelectTheme']", {
         visible: true,
@@ -371,7 +374,7 @@ function randomInt(min, max) {
       }, _date);
 
       await page.click("button[type='submit']", {delay:100});
-      await page.click("button[type='reset']", {delay:100});
+      await page.click("button[type='reset']", {delay:300});
 
       // let submission_result = await page.$(
       //   "form > div.form-submitted-row > div > div > div > p"
@@ -382,13 +385,22 @@ function randomInt(min, max) {
       // });
       // console.log(submission_msg);
       // await waitFor(1000);
+
+      // sending data to frontend
+      stream.sendEvent("activity_change", JSON.stringify({"sno":activityIndex,result:1}));
+      
+      console.log(AWCs[AWCsIndex].title, activityObj.title);
       activityIndex++;
-      console.log(AWCs[AWCsIndex].title, activity[activityIndex].title);
     }
     AWCsIndex++;
     activityIndex = 0;
+    stream.sendEvent("AWC_change", JSON.stringify({"sno":AWCsIndex,result:1}));
   }
 
   console.log("Completed for date ", _date, "successfully");
-  // await browser.close();
-})();
+  await browser.close();
+  stream.sendEvent("close", "Connection End");
+  stream.end();
+}
+
+module.exports = {AWCs, activity, scrap};

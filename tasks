@@ -4,6 +4,10 @@ Bugs
 [ ] 2) Wait for success message
 [ ] 3) check the submission result if it Says data is already submitted then infor.
 [ ] 4) fix undefined error in activity object
+[ ] 5) validate inputs from server
+[ ] 6) create function that handles the onclick events of AWCs name in frontend
+[ ] 7) Javascript validation on inputs
+[ ] 8) 
 
 Questions
 ---------------------------------------
